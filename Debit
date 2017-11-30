@@ -1,9 +1,0 @@
-Debit {
-  roles B, S
-  parameters in order key, out payment
-  private acceptDebit
-
-  S -> B: AcceptDebit[in order, out acceptDebit]
-  B -> S: PayDebit[in order, in acceptDebit, out payment]
-}
-
