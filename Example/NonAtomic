@@ -1,0 +1,25 @@
+Ship {
+    roles Shipper, Buyer
+    parameters in id key, out acknowledge
+    private temp
+
+    Buyer -> Shipper: AcceptDetails[in id, out temp]
+    Shipper -> Buyer: Respond[in id, in temp, out acknowledge]
+}
+ShipProcess {
+    roles Shipper, Buyer
+    parameters in id key, out acknowledge
+    private tempShip
+
+    Buyer -> Shipper: ObtainShip[in id, out tempShip]
+    Shipper -> Buyer: Interact[in id, in tempShip, out acknowledge]
+}
+Interactions {
+    roles Shipper, Buyer
+    parameters out id key, out complete
+    private acknowledge
+    Shipper -> Buyer: StartShip[out id]
+    Ship(Shipper, Buyer, id, acknowledge)
+    ShipProcess(Shipper, Buyer, id, acknowledge)
+    Buyer -> Shipper: OnCompletion[in id, in acknowledge, out complete]
+}

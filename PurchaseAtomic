@@ -1,0 +1,26 @@
+Debit {
+    roles B, S
+    parameters in order key, out debitPay
+    private acceptDebit
+
+    S -> B: AcceptDebit[in order, out acceptDebit]
+    B -> S: PayDebit[in order, in acceptDebit, out debitPay]
+}
+Credit {
+    roles B, S
+    parameters in order key, out creditPay
+    private acceptCredit
+
+    S -> B: AcceptCredit[in order, out acceptCredit]
+    B -> S: PayCredit[in order, in acceptCredit, out creditPay]
+}
+Purchase {
+    roles B, S
+    parameters out order key, out filled
+    private debitPay, creditPay, payment, donePay
+    B -> S: PlaceOrder[out order]
+    Debit(B, S, order, debitPay)
+    Credit(B, S, order, creditPay)
+    B -> S: CompletePayment[in debitPay, in creditPay, out payment, out donePay]
+    S -> B: FillOrder[in order, in donePay, in payment, out filled]
+}
